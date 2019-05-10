@@ -12,9 +12,9 @@ node.normal['kubeadm']['api_ip_address'] = master[0]['ipaddress']
 execute 'kubeadm join' do
   command <<-EOF
     kubeadm join \
-    --token=#{node['kubeadm']['token']} \
+    --token=#{node['kubeadm']['token']} --discovery-token-unsafe-skip-ca-verification \
     #{node['kubeadm']['api_ip_address']}:6443
-    EOF
+  EOF
   action :run
   not_if "grep 'https://#{node['kubeadm']['api_ip_address']}' /etc/kubernetes/kubelet.conf"
 end
@@ -22,22 +22,19 @@ end
 # This is the node IP address
 node_ip = node['network']['interfaces'][node['kubeadm']['flannel_iface']]['addresses'].keys[1]
 
-# template new kubelet config file
-template '/etc/systemd/system/kubelet.service.d/10-kubeadm.conf' do
-  source '10-kubeadm.conf.erb'
+
+#Extra args for kubernetes go here.
+template '/etc/default/kubelet' do
+  source 'kubelet.erb'
   owner 'root'
   group 'root'
   mode '0755'
-  not_if { ::File.readlines('/etc/systemd/system/kubelet.service.d/10-kubeadm.conf').grep(/node-ip=#{node_ip} /).any? }
+  variables({
+                :nodeIp => node_ip
+
+            })
 end
 
-# modify kubelet config file to include network interface
-execute 'modify kubelet config' do
-  command "sed -i -e 's/--node-ip= /--node-ip=#{node_ip} /g' /etc/systemd/system/kubelet.service.d/10-kubeadm.conf"
-  action :run
-  not_if { ::File.readlines('/etc/systemd/system/kubelet.service.d/10-kubeadm.conf').grep(/node-ip=#{node_ip} /).any? }
-  notifies :run, 'execute[systemd daemon reload]', :immediately
-end
 
 # systemd daemon reload after kubelet config file changed
 execute 'systemd daemon reload' do

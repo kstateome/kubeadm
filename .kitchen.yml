@@ -15,47 +15,84 @@ verifier:
   name: inspec
 
 platforms:
-#  - name: ubuntu-16.04
-  - name: centos/7
+  - name: ubuntu-18.04
+#  - name: centos/7
 
 suites:
   - name: master
     run_list:
+      - recipe[apt]
       - recipe[kubeadm::master]
       - recipe[kubeadm::dashboard]
-      - recipe[kubeadm::heapster]
+      #- recipe[kubeadm::heapster]
     driver:
       vm_hostname: master.vagrant.test
       network:
+        - ["forwarded_port", {guest: 8001, host: 9001}]
         - ["private_network", {ip: "172.28.128.200"}]
       customize:
         memory: 2048
+        cpus: 2
     verifier:
       inspec_tests:
         - test/smoke/default
-    attributes:
+    attributes: null
   - name: node01
     run_list:
+      - recipe[apt]
       - recipe[kubeadm::node]
     driver:
       vm_hostname: node01.vagrant.test
       network:
         - ["private_network", {ip: "172.28.128.201"}]
       customize:
-        memory: 1024
+        memory: 2048
+        cpus: 2
     verifier:
       inspec_tests:
         - test/smoke/default
     attributes:
   - name: node02
     run_list:
+      - recipe[apt]
       - recipe[kubeadm::node]
     driver:
       vm_hostname: node02.vagrant.test
       network:
         - ["private_network", {ip: "172.28.128.202"}]
       customize:
-        memory: 1024
+        memory: 2048
+        cpus: 2
+    verifier:
+      inspec_tests:
+        - test/smoke/default
+    attributes:
+  - name: node03
+    run_list:
+      - recipe[apt]
+      - recipe[kubeadm::node]
+    driver:
+      vm_hostname: node03.vagrant.test
+      network:
+        - ["private_network", {ip: "172.28.128.203"}]
+      customize:
+        memory: 2048
+        cpus: 2
+    verifier:
+      inspec_tests:
+        - test/smoke/default
+    attributes:
+  - name: node04
+    run_list:
+      - recipe[apt]
+      - recipe[kubeadm::node]
+    driver:
+      vm_hostname: node04.vagrant.test
+      network:
+        - ["private_network", {ip: "172.28.128.204"}]
+      customize:
+        memory: 2048
+        cpus: 2
     verifier:
       inspec_tests:
         - test/smoke/default

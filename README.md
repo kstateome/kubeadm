@@ -7,14 +7,23 @@ Chef cookbook to create a Kubernetes infrastructure using kubeadm tool:
 Based in the official documents:
 https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/
 
+## To run in dev environment
+
+You will need chefdk installed.
+
+```
+chef gem install kitchen-nodes
+kitchen converge
+kitchen login master
+```
+
 ## Requirements
 ### Cookbooks
 none
 ### Platforms
 The following platforms are supported and tested with Test Kitchen:
 
-- CentOS 7+
-- RedHat 7+
+- Ubuntu 18.04+
 
 ### Chef
 - Chef 12.1+
@@ -41,6 +50,8 @@ The following platforms are supported and tested with Test Kitchen:
 - kube-proxy (container)
 - kube-flannel (container)
 - docker
+
+This will not setup a multi-node master, and should not be used in OME's production environment at this time.
 
 Use the runlist: recipe[kubeadm::master], recipe[kubeadm::dashboard], recipe[kubeadm::heapster]
 
