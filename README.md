@@ -29,7 +29,7 @@ The following platforms are supported and tested with Test Kitchen:
 - Chef 12.1+
 
 ## Attributes
-* default['kubeadm']['token'] = '1fca99.fcdf6621ba31d922'
+* default['kubeadm']['token'] = 'odp6v2.n9wtntgl7lnaz23s'
 * default['kubeadm']['pod_cidr'] = '10.244.0.0/16'
 * default['kubeadm']['service_cidr'] = '10.96.0.0/12'
 * default['kubeadm']['dns_domain'] = 'cluster.local'
