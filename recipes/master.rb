@@ -40,7 +40,6 @@ execute 'kubeadm init' do
     --service-cidr=#{node['kubeadm']['service_cidr']} \
     --service-dns-domain=#{node['kubeadm']['dns_domain']} \
     --apiserver-advertise-address=#{node['kubeadm']['api_ip_address']}
-    --experimental-upload-certs
   EOF
   action :run
   not_if "grep 'https://#{node['kubeadm']['api_ip_address']}' /etc/kubernetes/kubelet.conf"
@@ -82,9 +81,9 @@ execute 'kube config for vagrant user' do
   command <<-EOF
   mkdir -p /home/vagrant/.kube
   sudo cp -i /etc/kubernetes/admin.conf /home/vagrant/.kube/config
-  sudo chown vagrant:vagrant /home/vagrant.kube/config
+  sudo chown vagrant:vagrant /home/vagrant/.kube/config
   EOF
-  not_if 'test -f $HOME/.kube/config'
+  not_if 'test -f /home/vagrant/.kube/config'
 end
 
 
