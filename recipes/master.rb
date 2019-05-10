@@ -21,20 +21,7 @@ directory '/etc/kubernetes/manifests/' do
   action :create
 end
 
-#Setup the control plane on the initial master
-# loadBalancerDNS needs to point to ip on dev nodes
-# todo: make this pick the right dns name if environment isn't dev
-template '/etc/kubernetes/manifests/kubeadm-config.yaml' do
-  source 'kubeadm-config.yaml.erb'
-  owner 'root'
-  group 'root'
-  mode '0755'
-  variables({
-                :loadBalancerDNS => node_ip,
-                :loadBalancerPort => port
 
-            })
-end
 
 execute 'kubeadm config pull' do
   command <<-EOF
@@ -93,9 +80,9 @@ end
 
 execute 'kube config for vagrant user' do
   command <<-EOF
-  mkdir -p $HOME/.kube
-  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+  mkdir -p /home/vagrant/.kube
+  sudo cp -i /etc/kubernetes/admin.conf /home/vagrant/.kube/config
+  sudo chown vagrant:vagrant /home/vagrant.kube/config
   EOF
   not_if 'test -f $HOME/.kube/config'
 end
