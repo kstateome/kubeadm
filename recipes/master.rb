@@ -64,6 +64,22 @@ template '/etc/default/kubelet' do
                 :nodeIp => node_ip
 
             })
+  notifies :run, 'execute[systemd daemon reload]', :immediately
+
+end
+
+# systemd daemon reload after kubelet config file changed
+execute 'systemd daemon reload' do
+  command 'systemctl daemon-reload'
+  action :nothing
+  notifies :restart, 'service[restart kubelet]', :immediately
+end
+
+# restart kubelet
+service 'restart kubelet' do
+  service_name 'kubelet'
+  supports status: true
+  action [:nothing]
 end
 
 # Kube config for root
@@ -121,19 +137,7 @@ execute 'delay for flannel networking to start.' do
 end
 
 
-# systemd daemon reload after kubelet config file changed
-execute 'systemd daemon reload' do
-  command 'systemctl daemon-reload'
-  action :nothing
-  notifies :restart, 'service[restart kubelet]', :immediately
-end
 
-# restart kubelet
-service 'restart kubelet' do
-  service_name 'kubelet'
-  supports status: true
-  action [:nothing]
-end
 
 
 

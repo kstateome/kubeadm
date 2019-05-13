@@ -5,6 +5,6 @@ default['kubeadm']['dns_domain'] = 'cluster.local'
 # default['kubeadm']['api_ip_address'] = '172.28.128.200'
 default['kubeadm']['single_node_cluster'] = false
 default['kubeadm']['flannel_iface'] = 'eth1'
-default['kubeadm']['version'] = '1.8.3-0'
+default['kubeadm']['version'] = '1.14.1-0'
 default['kubeadm']['dashboard_commit_hash7'] = '28527b0'
 default['kubeadm']['heapster_commit_hash7'] = '9f415d0'

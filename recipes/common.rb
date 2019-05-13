@@ -112,6 +112,7 @@ execute 'kernel bridged traffic' do
     echo 'net.bridge.bridge-nf-call-iptables=1' >> /etc/sysctl.conf
     echo 'net.bridge.bridge-nf-call-ip6tables=1' >> /etc/sysctl.conf
     sysctl -p
+    sysctl net.bridge.bridge-nf-call-iptables=1
   EOF
   action :run
   not_if 'sysctl -n net.bridge.bridge-nf-call-iptables | grep 1'

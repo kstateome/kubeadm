@@ -17,6 +17,7 @@ bash 'download dashboard' do
   not_if { ::File.exist?("#{install_path}/kubernetes-dashboard.yaml") }
 end
 
+
 # install dashboard addon
 execute 'install dashboard' do
   cwd install_path

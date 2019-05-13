@@ -33,8 +33,15 @@ template '/etc/default/kubelet' do
                 :nodeIp => node_ip
 
             })
+  notifies :run, 'execute[systemd daemon reload]', :immediately
 end
 
+directory '/etc/kubernetes/manifests/' do
+  owner 'root'
+  group 'root'
+  mode '0755'
+  action :create
+end
 
 # systemd daemon reload after kubelet config file changed
 execute 'systemd daemon reload' do
@@ -46,6 +53,14 @@ end
 # restart kubelet
 service 'restart kubelet' do
   service_name 'kubelet'
+  supports status: true
+  action [:nothing]
+  notifies :restart, 'service[restart docker]', :immediately
+end
+
+# restart docker
+service 'restart docker' do
+  service_name 'docker'
   supports status: true
   action [:nothing]
 end
