@@ -3,6 +3,8 @@ driver:
   name: vagrant
   vagrantfiles:
     - Vagrantfile.rb
+  synced_folders:
+    - ['.','/vagrant']
 
 provisioner:
   name: nodes
