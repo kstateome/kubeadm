@@ -90,7 +90,11 @@ execute 'disable swap' do
   not_if 'swapon -s | wc -l | grep 0'
 end
 
-
+execute 'add vagrant user to docker group' do
+  command 'usermod -aG docker vagrant'
+  action :run
+  user 'root'
+end
 
 apt_package 'kubeadm' do
   action :install
