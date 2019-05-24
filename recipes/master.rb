@@ -104,8 +104,8 @@ end
 
 
 # https://raw.githubusercontent.com/coreos/flannel/v0.9.0/Documentation/kube-flannel.yml
-template '/tmp/kube-flannel.yml' do
-  source 'kube-flannel.yml.erb'
+template '/tmp/kube-flannel-calico.yml' do
+  source 'kube-flannel-calico.yml.erb'
   owner 'root'
   group 'root'
   mode '0644'
@@ -117,7 +117,7 @@ end
 
 execute 'kubectl flannel' do
   command <<-EOF
-  kubectl apply -f /tmp/kube-flannel.yml
+  kubectl apply -f /tmp/kube-flannel-calico.yml
   EOF
   action :run
   not_if 'kubectl get pods -n kube-system | grep flannel | grep Running'
